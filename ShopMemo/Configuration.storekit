@@ -1,10 +1,10 @@
 {
-  "identifier" : "com.keisukearai.myshopmemo.storekit",
+  "identifier" : "com.keisukearai.my-shops-memo.storekit",
   "nonConsumableProducts" : [
     {
       "displayPrice" : "600",
       "familySharable" : false,
-      "internalID" : "com.keisukearai.myshopmemo.premium",
+      "internalID" : "com.keisukearai.my-shops-memo.premium",
       "localizations" : [
         {
           "description" : "Unlock unlimited shopping lists.",
@@ -57,7 +57,7 @@
           "locale" : "zh_Hans_CN"
         }
       ],
-      "productID" : "com.keisukearai.myshopmemo.premium",
+      "productID" : "com.keisukearai.my-shops-memo.premium",
       "referenceName" : "Premium",
       "type" : "NonConsumable"
     }
