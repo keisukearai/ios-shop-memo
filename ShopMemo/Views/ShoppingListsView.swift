@@ -58,10 +58,10 @@ struct ShoppingListsView: View {
     private var listContent: some View {
         List {
             if !purchaseService.isPremium {
-                Section {
-                    freeUsageBanner
-                }
-                .listRowInsets(EdgeInsets())
+                freeUsageBanner
+                    .listRowInsets(EdgeInsets())
+                    .listRowSeparator(.hidden)
+                    .listSectionSpacing(0)
             }
             ForEach(viewModel.lists) { list in
                 NavigationLink {
@@ -85,15 +85,20 @@ struct ShoppingListsView: View {
     }
 
     private var freeUsageBanner: some View {
-        HStack {
-            Image(systemName: "info.circle").foregroundStyle(.secondary)
+        HStack(spacing: 6) {
+            Image(systemName: "info.circle")
+                .font(.caption)
+                .foregroundStyle(.secondary)
             Text(lm.lf("free_usage_banner", viewModel.lists.count, viewModel.freeLimit))
-                .font(.caption).foregroundStyle(.secondary)
+                .font(.caption)
+                .foregroundStyle(.secondary)
             Spacer()
             Button(lm.l("upgrade_button")) { showingPaywall = true }
-                .font(.caption).fontWeight(.semibold)
+                .font(.caption)
+                .fontWeight(.semibold)
         }
-        .padding(.horizontal).padding(.vertical, 8)
+        .padding(.horizontal, 16)
+        .padding(.vertical, 6)
         .background(Color(.systemGray6))
         .listRowBackground(Color(.systemGray6))
     }

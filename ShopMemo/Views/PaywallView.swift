@@ -13,13 +13,12 @@ struct PaywallView: View {
     var body: some View {
         NavigationStack {
             ScrollView {
-                VStack(spacing: 32) {
+                VStack(spacing: 20) {
                     headerSection
                     featuresSection
-                    Spacer(minLength: 0)
                     purchaseSection
                 }
-                .padding(.vertical, 24)
+                .padding(.vertical, 16)
             }
             .navigationTitle(lm.l("paywall_nav_title"))
             .navigationBarTitleDisplayMode(.inline)
@@ -43,17 +42,17 @@ struct PaywallView: View {
     }
 
     private var headerSection: some View {
-        VStack(spacing: 12) {
+        VStack(spacing: 8) {
             Image(systemName: "crown.fill")
-                .font(.system(size: 60))
+                .font(.system(size: 48))
                 .foregroundStyle(.yellow)
 
             Text(lm.l("paywall_title"))
-                .font(.largeTitle)
+                .font(.title2)
                 .fontWeight(.bold)
 
             Text(lm.l("paywall_subtitle"))
-                .font(.body)
+                .font(.subheadline)
                 .foregroundStyle(.secondary)
                 .multilineTextAlignment(.center)
                 .padding(.horizontal, 32)
@@ -61,12 +60,12 @@ struct PaywallView: View {
     }
 
     private var featuresSection: some View {
-        VStack(alignment: .leading, spacing: 16) {
-            FeatureRow(icon: "infinity", text: lm.l("feature_unlimited"))
-        }
-        .padding(20)
-        .background(Color(.systemGray6), in: RoundedRectangle(cornerRadius: 16))
-        .padding(.horizontal)
+        FeatureRow(icon: "infinity", text: lm.l("feature_unlimited"))
+            .padding(.horizontal, 20)
+            .padding(.vertical, 14)
+            .frame(maxWidth: .infinity, alignment: .leading)
+            .background(Color(.systemGray6), in: RoundedRectangle(cornerRadius: 14))
+            .padding(.horizontal)
     }
 
     private var purchaseSection: some View {
