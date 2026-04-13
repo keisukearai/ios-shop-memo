@@ -13,6 +13,18 @@ class ShopMemoViewModel {
     /// よく使う商品の履歴（最新順）
     var itemHistory: [String] = []
 
+    let freeLimit: Int = {
+        #if DEBUG
+        return 100
+        #else
+        return 5
+        #endif
+    }()
+
+    func canCreateList(isPremium: Bool) -> Bool {
+        isPremium || lists.count < freeLimit
+    }
+
     // MARK: - Private
 
     private let listsKey   = "ShopMemoLists"
@@ -140,12 +152,18 @@ class ShopMemoViewModel {
     // MARK: - History
 
     /// 現在のリストに未追加の履歴を返す（入力中はフィルタリング）
+    /// 履歴は最新10件のみ。入力がある場合はカテゴリキーワードのマッチも末尾に追加する
     func filteredHistory(for listId: UUID, input: String) -> [String] {
         let currentNames = Set(items(in: listId).map(\.name))
         if input.isEmpty {
-            return itemHistory.filter { !currentNames.contains($0) }
+            return itemHistory.filter { !currentNames.contains($0) }.prefix(10).map { $0 }
         } else {
-            return itemHistory.filter { !currentNames.contains($0) && $0.contains(input) }
+            let historyMatches = Array(itemHistory.filter { !currentNames.contains($0) && $0.contains(input) }.prefix(10))
+            let historySet = Set(historyMatches)
+            let keywordMatches = ItemCategory.suggestions(matching: input).filter {
+                !currentNames.contains($0) && !historySet.contains($0)
+            }
+            return historyMatches + keywordMatches
         }
     }
 

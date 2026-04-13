@@ -45,21 +45,45 @@ enum ItemCategory: String, CaseIterable, Codable, Hashable {
         }
     }
 
+    // MARK: - サジェスト
+
+    /// 入力文字列を含むキーワードを keywordMap から返す
+    /// より長いキーワードが存在する場合は完全一致の短いキーワードを除外する
+    /// 例: "牛" → ["牛乳", "牛肉"]（"牛" 自体は除外）
+    /// 例: "carrot" → ["carrot"]（longer がないので完全一致を返す）
+    static func suggestions(matching input: String) -> [String] {
+        guard !input.isEmpty else { return [] }
+        let all = keywordMap.flatMap { $0.1 }.filter { $0.localizedCaseInsensitiveContains(input) }
+        let longer = all.filter { $0.count > input.count }
+        return longer.isEmpty ? all : longer
+    }
+
     // MARK: - 自動分類
 
     /// 商品名からキーワードマッチングでカテゴリを自動判定する
     static func classify(_ name: String) -> ItemCategory {
-        let target = name  // 大文字・小文字は保持（日本語は区別不要）
         for (category, keywords) in keywordMap {
-            if keywords.contains(where: { target.contains($0) }) {
+            if keywords.contains(where: { name.localizedCaseInsensitiveContains($0) }) {
                 return category
             }
         }
         return .other
     }
 
-    /// カテゴリ → キーワード一覧（上から順に評価される）
-    private static let keywordMap: [(ItemCategory, [String])] = [
+    // MARK: - キーワードマップ（言語切替）
+
+    /// システム言語が日本語かどうか
+    private static var isJapanese: Bool {
+        Locale.current.language.languageCode?.identifier == "ja"
+    }
+
+    /// 言語に応じたキーワードマップを返す
+    private static var keywordMap: [(ItemCategory, [String])] {
+        isJapanese ? japaneseKeywordMap : englishKeywordMap
+    }
+
+    /// 日本語キーワードマップ（上から順に評価される）
+    private static let japaneseKeywordMap: [(ItemCategory, [String])] = [
         (.staple, [
             "パン", "食パン", "バゲット", "クロワッサン", "ロールパン", "トースト",
             "ラーメン", "インスタントラーメン", "カップラーメン", "カップ麺",
@@ -74,8 +98,8 @@ enum ItemCategory: String, CaseIterable, Codable, Hashable {
             "じゃがいも", "トマト", "きゅうり", "なす", "ほうれん草", "ブロッコリー",
             "ピーマン", "ねぎ", "ニンニク", "にんにく", "しょうが", "もやし",
             "大根", "だいこん", "ごぼう", "れんこん", "アスパラ", "セロリ",
-            "パプリカ", "白菜", "はくさい", "野菜", "サラダ", "豆腐", "油揚げ",
-            "厚揚げ", "えだまめ", "枝豆", "ズッキーニ", "とうもろこし", "コーン",
+            "パプリカ", "白菜", "はくさい", "野菜", "サラダ",
+            "えだまめ", "枝豆", "ズッキーニ", "とうもろこし", "コーン",
             "小松菜", "チンゲン菜", "春菊", "水菜", "オクラ", "インゲン"
         ]),
         (.beverage, [
@@ -100,6 +124,45 @@ enum ItemCategory: String, CaseIterable, Codable, Hashable {
             "洗顔", "化粧水", "マスク", "電池", "薬", "日用品", "掃除",
             "スポンジ", "ボディソープ", "ハンドソープ", "生理用品", "おむつ",
             "ハンドクリーム", "日焼け止め", "綿棒", "ばんそうこう"
+        ])
+    ]
+
+    /// 英語キーワードマップ（上から順に評価される）
+    private static let englishKeywordMap: [(ItemCategory, [String])] = [
+        (.staple, [
+            "bread", "toast", "baguette", "croissant", "roll",
+            "ramen", "noodle", "pasta", "spaghetti", "penne", "macaroni", "fettuccine",
+            "rice", "brown rice", "cereal", "oatmeal", "granola",
+            "udon", "soba", "vermicelli", "flour", "pancake mix"
+        ]),
+        (.vegetable, [
+            "carrot", "cabbage", "pumpkin", "lettuce", "onion",
+            "potato", "tomato", "cucumber", "eggplant", "aubergine", "spinach", "broccoli",
+            "bell pepper", "pepper", "garlic", "ginger", "bean sprout",
+            "radish", "burdock", "lotus root", "asparagus", "celery",
+            "paprika", "bok choy", "zucchini", "courgette", "corn", "edamame",
+            "komatsuna", "okra", "green bean", "kale", "leek", "vegetable", "salad"
+        ]),
+        (.beverage, [
+            "milk", "soy milk", "yogurt", "yoghurt",  // dairy before meat
+            "water", "tea", "green tea", "coffee", "juice", "beer", "wine",
+            "sake", "cola", "soda", "sports drink", "drink", "alcohol",
+            "orange juice", "lemonade", "smoothie", "sparkling"
+        ]),
+        (.meatFish, [
+            "beef", "pork", "chicken", "ground meat", "minced meat", "mince",
+            "bacon", "sausage", "ham", "fish", "salmon", "tuna",
+            "shrimp", "prawn", "squid", "octopus", "mackerel", "yellowtail",
+            "seafood", "scallop", "crab", "clam", "anchovy", "cod", "tilapia",
+            "steak", "fillet", "meat"
+        ]),
+        (.daily, [
+            "shampoo", "conditioner", "rinse", "soap", "detergent", "softener",
+            "tissue", "toilet paper", "kitchen paper", "paper towel",
+            "plastic wrap", "aluminum foil", "toothbrush", "toothpaste",
+            "face wash", "toner", "mask", "battery", "medicine", "daily",
+            "sponge", "body wash", "hand soap", "diaper", "nappy",
+            "hand cream", "sunscreen", "cotton swab", "bandage", "band-aid"
         ])
     ]
 }

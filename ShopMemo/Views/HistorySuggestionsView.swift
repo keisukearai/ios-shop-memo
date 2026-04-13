@@ -1,14 +1,19 @@
 import SwiftUI
 
-/// キーボード表示中に過去の商品をサジェストする横スクロールビュー
+/// キーボード表示中に過去の商品をサジェストする2行横スクロールビュー
 struct HistorySuggestionsView: View {
     let suggestions: [String]
     let onSelect: (String) -> Void
 
+    private let rows = [
+        GridItem(.fixed(32), spacing: 8),
+        GridItem(.fixed(32), spacing: 8)
+    ]
+
     var body: some View {
         ScrollView(.horizontal, showsIndicators: false) {
-            HStack(spacing: 8) {
-                ForEach(suggestions.prefix(15), id: \.self) { suggestion in
+            LazyHGrid(rows: rows, spacing: 8) {
+                ForEach(suggestions.prefix(30), id: \.self) { suggestion in
                     Button {
                         onSelect(suggestion)
                     } label: {
@@ -25,6 +30,7 @@ struct HistorySuggestionsView: View {
             .padding(.horizontal, 16)
             .padding(.vertical, 8)
         }
+        .frame(height: 80)
         .background(Color(uiColor: .systemBackground))
     }
 }

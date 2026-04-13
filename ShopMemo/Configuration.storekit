@@ -1,0 +1,102 @@
+{
+  "identifier" : "com.keisukearai.ShopMemo.storekit",
+  "nonConsumableProducts" : [
+    {
+      "displayPrice" : "600",
+      "familySharable" : false,
+      "internalID" : "com.keisukearai.ShopMemo.premium",
+      "localizations" : [
+        {
+          "description" : "Unlock unlimited shopping lists.",
+          "displayName" : "Premium",
+          "locale" : "en_US"
+        },
+        {
+          "description" : "無制限の買い物リストを登録できます。",
+          "displayName" : "プレミアム",
+          "locale" : "ja_JP"
+        },
+        {
+          "description" : "Desbloquea listas de compras ilimitadas.",
+          "displayName" : "Premium",
+          "locale" : "es_ES"
+        },
+        {
+          "description" : "Débloquez des listes de courses illimitées.",
+          "displayName" : "Premium",
+          "locale" : "fr_FR"
+        },
+        {
+          "description" : "असीमित खरीदारी सूचियाँ अनलॉक करें।",
+          "displayName" : "प्रीमियम",
+          "locale" : "hi_IN"
+        },
+        {
+          "description" : "Entsperre unbegrenzte Einkaufslisten.",
+          "displayName" : "Premium",
+          "locale" : "de_DE"
+        },
+        {
+          "description" : "Desbloqueie listas de compras ilimitadas.",
+          "displayName" : "Premium",
+          "locale" : "pt_BR"
+        },
+        {
+          "description" : "ปลดล็อกรายการช้อปปิ้งไม่จำกัด",
+          "displayName" : "พรีเมียม",
+          "locale" : "th_TH"
+        },
+        {
+          "description" : "Mở khóa danh sách mua sắm không giới hạn.",
+          "displayName" : "Cao cấp",
+          "locale" : "vi_VN"
+        },
+        {
+          "description" : "解锁无限购物清单。",
+          "displayName" : "高级版",
+          "locale" : "zh_Hans_CN"
+        }
+      ],
+      "productID" : "com.keisukearai.ShopMemo.premium",
+      "referenceName" : "Premium",
+      "type" : "NonConsumable"
+    }
+  ],
+  "products" : [
+
+  ],
+  "settings" : {
+    "_failTransactionsEnabled" : false,
+    "_locale" : "en_US",
+    "_storefront" : "JPN",
+    "_storeKitErrors" : [
+      {
+        "current" : null,
+        "enabled" : false,
+        "name" : "Load Products"
+      },
+      {
+        "current" : null,
+        "enabled" : false,
+        "name" : "Purchase"
+      },
+      {
+        "current" : null,
+        "enabled" : false,
+        "name" : "Verification"
+      },
+      {
+        "current" : null,
+        "enabled" : false,
+        "name" : "App Store Sync"
+      }
+    ]
+  },
+  "subscriptionGroups" : [
+
+  ],
+  "version" : {
+    "major" : 2,
+    "minor" : 0
+  }
+}

@@ -2,8 +2,10 @@ import SwiftUI
 
 struct ShoppingListsView: View {
     @Environment(ShopMemoViewModel.self) private var viewModel
+    @Environment(PurchaseService.self) private var purchaseService
     @Environment(LanguageManager.self) private var lm
     @State private var showingLanguage = false
+    @State private var showingPaywall = false
 
     var body: some View {
         NavigationStack {
@@ -22,16 +24,32 @@ struct ShoppingListsView: View {
                     }
                 }
                 ToolbarItem(placement: .topBarTrailing) {
-                    Button {
-                        viewModel.createNewList()
-                    } label: {
-                        Image(systemName: "plus")
+                    HStack(spacing: 16) {
+                        if purchaseService.isPremium {
+                            Image(systemName: "crown.fill")
+                                .foregroundStyle(.yellow)
+                                .font(.caption)
+                        }
+                        Button { handleAddTap() } label: {
+                            Image(systemName: "plus")
+                        }
                     }
                 }
             }
             .sheet(isPresented: $showingLanguage) {
                 LanguageSettingsView()
             }
+            .sheet(isPresented: $showingPaywall) {
+                PaywallView()
+            }
+        }
+    }
+
+    private func handleAddTap() {
+        if viewModel.canCreateList(isPremium: purchaseService.isPremium) {
+            viewModel.createNewList()
+        } else {
+            showingPaywall = true
         }
     }
 
@@ -39,6 +57,12 @@ struct ShoppingListsView: View {
 
     private var listContent: some View {
         List {
+            if !purchaseService.isPremium {
+                Section {
+                    freeUsageBanner
+                }
+                .listRowInsets(EdgeInsets())
+            }
             ForEach(viewModel.lists) { list in
                 NavigationLink {
                     ItemListView(listId: list.id)
@@ -58,6 +82,20 @@ struct ShoppingListsView: View {
             }
         }
         .listStyle(.insetGrouped)
+    }
+
+    private var freeUsageBanner: some View {
+        HStack {
+            Image(systemName: "info.circle").foregroundStyle(.secondary)
+            Text(lm.lf("free_usage_banner", viewModel.lists.count, viewModel.freeLimit))
+                .font(.caption).foregroundStyle(.secondary)
+            Spacer()
+            Button(lm.l("upgrade_button")) { showingPaywall = true }
+                .font(.caption).fontWeight(.semibold)
+        }
+        .padding(.horizontal).padding(.vertical, 8)
+        .background(Color(.systemGray6))
+        .listRowBackground(Color(.systemGray6))
     }
 
     private var emptyState: some View {
@@ -163,7 +201,9 @@ struct ShoppingListRowView: View {
 #Preview {
     let vm = ShopMemoViewModel()
     let lm = LanguageManager()
+    let ps = PurchaseService()
     return ShoppingListsView()
         .environment(vm)
         .environment(lm)
+        .environment(ps)
 }
