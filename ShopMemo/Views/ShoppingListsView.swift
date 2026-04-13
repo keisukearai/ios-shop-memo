@@ -57,12 +57,6 @@ struct ShoppingListsView: View {
 
     private var listContent: some View {
         List {
-            if !purchaseService.isPremium {
-                freeUsageBanner
-                    .listRowInsets(EdgeInsets())
-                    .listRowSeparator(.hidden)
-                    .listSectionSpacing(0)
-            }
             ForEach(viewModel.lists) { list in
                 NavigationLink {
                     ItemListView(listId: list.id)
@@ -82,6 +76,11 @@ struct ShoppingListsView: View {
             }
         }
         .listStyle(.insetGrouped)
+        .safeAreaInset(edge: .top, spacing: 0) {
+            if !purchaseService.isPremium {
+                freeUsageBanner
+            }
+        }
     }
 
     private var freeUsageBanner: some View {
@@ -100,7 +99,6 @@ struct ShoppingListsView: View {
         .padding(.horizontal, 16)
         .padding(.vertical, 6)
         .background(Color(.systemGray6))
-        .listRowBackground(Color(.systemGray6))
     }
 
     private var emptyState: some View {
