@@ -13,13 +13,7 @@ class ShopMemoViewModel {
     /// よく使う商品の履歴（最新順）
     var itemHistory: [String] = []
 
-    let freeLimit: Int = {
-        #if DEBUG
-        return 100
-        #else
-        return 4
-        #endif
-    }()
+    let freeLimit: Int = 5
 
     func canCreateList(isPremium: Bool) -> Bool {
         isPremium || lists.count < freeLimit
