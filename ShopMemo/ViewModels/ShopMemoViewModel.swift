@@ -17,7 +17,7 @@ class ShopMemoViewModel {
         #if DEBUG
         return 100
         #else
-        return 5
+        return 4
         #endif
     }()
 
