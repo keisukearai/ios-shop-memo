@@ -76,7 +76,7 @@ struct ShoppingListsView: View {
             }
         }
         .listStyle(.insetGrouped)
-        .safeAreaInset(edge: .top, spacing: 0) {
+        .safeAreaInset(edge: .bottom, spacing: 0) {
             if !purchaseService.isPremium {
                 freeUsageBanner
             }
