@@ -48,14 +48,18 @@ enum ItemCategory: String, CaseIterable, Codable, Hashable {
     // MARK: - サジェスト
 
     /// 入力文字列を含むキーワードを keywordMap から返す
-    /// より長いキーワードが存在する場合は完全一致の短いキーワードを除外する
+    /// より長いキーワードが存在する場合は短いキーワードを除外するが、完全一致は常に含める
     /// 例: "牛" → ["牛乳", "牛肉"]（"牛" 自体は除外）
+    /// 例: "パン" → ["パン", "食パン", "ロールパン"]（完全一致の "パン" は必ず含める）
     /// 例: "carrot" → ["carrot"]（longer がないので完全一致を返す）
     static func suggestions(matching input: String) -> [String] {
         guard !input.isEmpty else { return [] }
         let all = keywordMap.flatMap { $0.1 }.filter { $0.localizedCaseInsensitiveContains(input) }
         let longer = all.filter { $0.count > input.count }
-        return longer.isEmpty ? all : longer
+        if longer.isEmpty { return all }
+        // 完全一致のキーワードは longer があっても除外しない
+        let exact = all.filter { $0 == input }
+        return exact + longer
     }
 
     // MARK: - 自動分類
@@ -115,7 +119,8 @@ enum ItemCategory: String, CaseIterable, Codable, Hashable {
             "えび", "エビ", "イカ", "いか", "タコ", "たこ", "アジ", "あじ",
             "さば", "サバ", "ぶり", "ブリ", "カツオ", "かつお", "ちくわ",
             "はんぺん", "かまぼこ", "刺身", "鶏", "豚", "牛", "シーフード",
-            "ホタテ", "ほたて", "カニ", "かに", "アサリ", "あさり"
+            "ホタテ", "ほたて", "カニ", "かに", "アサリ", "あさり",
+            "卵", "たまご", "玉子", "たまご", "うずら卵"
         ]),
         (.daily, [
             "シャンプー", "リンス", "コンディショナー", "石鹸", "せっけん",
@@ -154,7 +159,7 @@ enum ItemCategory: String, CaseIterable, Codable, Hashable {
             "bacon", "sausage", "ham", "fish", "salmon", "tuna",
             "shrimp", "prawn", "squid", "octopus", "mackerel", "yellowtail",
             "seafood", "scallop", "crab", "clam", "anchovy", "cod", "tilapia",
-            "steak", "fillet", "meat"
+            "steak", "fillet", "meat", "egg", "eggs"
         ]),
         (.daily, [
             "shampoo", "conditioner", "rinse", "soap", "detergent", "softener",
