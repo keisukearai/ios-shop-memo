@@ -4,7 +4,7 @@ import Observation
 
 @Observable
 class PurchaseService {
-    static let productID = "com.keisukearai.my-shops-memo.premium"
+    static let productID = "com.keisukearai.my_shops_memo.premium"
 
     private(set) var isPremium: Bool = false
     private var listenerTask: Task<Void, Never>?
