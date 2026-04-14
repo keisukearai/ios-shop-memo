@@ -78,6 +78,7 @@ struct ItemListView: View {
                     if !suggestions.isEmpty {
                         HistorySuggestionsView(suggestions: suggestions) { name in
                             viewModel.addItem(name: name, to: listId)
+                            newItemName = ""
                         }
                         .transition(.move(edge: .bottom).combined(with: .opacity))
                     }
